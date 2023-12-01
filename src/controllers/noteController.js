@@ -14,11 +14,19 @@ const getAllNotes = async (req, res) => {
 
 const createNote = async (req, res) => {
   try {
-      const note = await Note.create(req.body);
-      res.status(201).json(note);
+    const note = await Note.create({ ...req.body, notebook: req.body.notebook });
+    res.status(201).json(note);
   } catch (error) {
-      console.log(error.message);
-      res.status(500).json({message: error.message});
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const getNotes = async (req, res) => {
+  try {
+    const notes = await Note.find().populate('notebook', 'name');
+    res.json(notes);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -40,5 +48,6 @@ const deleteNote = async (req, res) => {
 module.exports = {
   getAllNotes,
   createNote,
+  getNotes,
   deleteNote,
 };

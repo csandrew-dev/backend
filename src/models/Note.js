@@ -10,7 +10,11 @@ const noteSchema = new mongoose.Schema(
     },
     text: {
       type: String
-    }
+    },
+    notebook: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Notebook',
+    },
   },
 
   {

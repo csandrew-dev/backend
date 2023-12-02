@@ -1,6 +1,7 @@
 // backend/src/controllers/notebookController.js
 
 const Notebook = require('../models/Notebook');
+const Note = require('../models/Note');
 
 const createNotebook = async (req, res) => {
   try {
@@ -21,19 +22,24 @@ const getNotebooks = async (req, res) => {
 };
 
 const deleteNotebook = async (req, res) => {
-    const { id } = req.params;
-    try {
-      // Use deleteOne to delete a single notebook by its ID
-      const deletedNotebook = await Notebook.deleteOne({ _id: id });
-      if (deletedNotebook.deletedCount === 1) {
-        res.status(204).send();
-      } else {
-        res.status(404).json({ error: 'Notebook not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+  const notebookId = req.params.id;
+
+  try {
+    // Fetch all notes associated with the notebook
+    const notes = await Note.find({ notebook: notebookId });
+
+    // Delete each note
+    await Promise.all(notes.map(async (note) => await Note.findByIdAndDelete(note._id)));
+
+    // Delete the notebook
+    await Notebook.findByIdAndDelete(notebookId);
+
+    res.json({ message: 'Notebook and associated notes deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting notebook and associated notes:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 
 module.exports = {

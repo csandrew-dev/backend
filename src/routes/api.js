@@ -13,5 +13,6 @@ router.delete('/notes/:id', noteController.deleteNote);
 // Notebook routes
 router.get('/notebooks', notebookController.getNotebooks);
 router.post('/notebooks', notebookController.createNotebook);
+router.delete('/notebooks/:id', notebookController.deleteNotebook);
 
 module.exports = router;

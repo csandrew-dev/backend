@@ -14,7 +14,10 @@ const getAllNotes = async (req, res) => {
 
 const createNote = async (req, res) => {
   try {
-    const note = await Note.create({ ...req.body, notebook: req.body.notebook });
+    // Check if the notebook attribute is an empty string and set it to null if needed
+    const notebookId = req.body.notebook === '' ? null : req.body.notebook;
+
+    const note = await Note.create({ ...req.body, notebook: notebookId });
     res.status(201).json(note);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });

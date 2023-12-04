@@ -21,6 +21,27 @@ const getNotebooks = async (req, res) => {
   }
 };
 
+const updateNotebookName = async (req, res) => {
+  const notebookId = req.params.id;
+  const newName = req.body.name;
+
+  try {
+    const notebook = await Notebook.findById(notebookId);
+
+    if (!notebook) {
+      res.status(404).json({ error: 'Notebook not found' });
+      return;
+    }
+
+    notebook.name = newName;
+    await notebook.save();
+
+    res.json(notebook);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
 const deleteNotebook = async (req, res) => {
   const notebookId = req.params.id;
 
@@ -46,4 +67,5 @@ module.exports = {
     createNotebook,
     getNotebooks,
     deleteNotebook,
+    updateNotebookName,
 };

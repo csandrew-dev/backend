@@ -9,6 +9,7 @@ const notebookController = require('../controllers/notebookController');
 router.get('/notes', noteController.getAllNotes);
 router.post('/notes', noteController.createNote);
 router.delete('/notes/:id', noteController.deleteNote);
+router.patch('/notes/:id', noteController.updateNote);
 
 // Notebook routes
 router.get('/notebooks', notebookController.getNotebooks);

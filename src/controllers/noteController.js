@@ -48,9 +48,27 @@ const deleteNote = async (req, res) => {
   }
 };
 
+const updateNote = async (req, res) => {
+  try {
+    // Check if the notebook attribute is an empty string and set it to null if needed
+    const notebookId = req.body.notebook === '' ? null : req.body.notebook;
+
+    const note = await Note.findByIdAndUpdate(
+      req.params.id,  // Assuming you have the note ID in the request parameters
+      { ...req.body, notebookId },
+      { new: true }   // This option returns the modified document
+    );
+
+    res.status(201).json(note);
+  } catch (error) {
+    console.error('Error updating note:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 module.exports = {
   getAllNotes,
   createNote,
   getNotes,
   deleteNote,
+  updateNote
 };
